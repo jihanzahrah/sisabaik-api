@@ -1,11 +1,14 @@
 import { pool } from "./pool.js";
+
 export async function transaksi(kerja, bacaSaja = false) {
   const client = await pool.connect();
   let dimulai = false;
   let rusak;
   try {
     await client.query(
-      bacaSaja ? "BEGIN ISOLATION LEVEL REPEATABLE READ READ ONLY" : "BEGIN",
+      bacaSaja
+        ? "BEGIN ISOLATION LEVEL REPEATABLE READ READ ONLY"
+        : "BEGIN",
     );
     dimulai = true;
     await client.query("SET LOCAL lock_timeout = '2s'");

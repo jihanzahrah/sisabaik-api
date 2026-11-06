@@ -4,10 +4,12 @@ import * as akun from "../repositories/pengguna.js";
 import { authConfig } from "../config/auth.js";
 import { buatToken } from "../lib/token.js";
 import { HttpError } from "../lib/api.js";
+
 const hashDummy = await bcrypt.hash(
   randomBytes(32).toString("hex"),
   authConfig.cost,
 );
+
 export async function registrasi(data) {
   const hash = await bcrypt.hash(data.kataSandi, authConfig.cost);
   try {
@@ -24,6 +26,7 @@ export async function registrasi(data) {
     throw error;
   }
 }
+
 export async function login(data) {
   const row = await akun.cariEmail(data.email);
   const cocok = await bcrypt.compare(
@@ -44,6 +47,7 @@ export async function login(data) {
     pengguna: akun.kePengguna(row),
   };
 }
+
 export async function registrasiPenyedia(data) {
   const hash = await bcrypt.hash(data.kataSandi, authConfig.cost);
   try {

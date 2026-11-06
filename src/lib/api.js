@@ -9,6 +9,7 @@ export class HttpError extends Error {
 export const salah = (pesan) => {
   throw new HttpError(400, "VALIDATION_ERROR", pesan);
 };
+
 export function idValid(nilai, nama = "id") {
   if (typeof nilai === "number" && !Number.isSafeInteger(nilai)) {
     salah(`${nama} harus integer yang aman atau string digit.`);
@@ -17,11 +18,15 @@ export function idValid(nilai, nama = "id") {
     salah(`${nama} wajib berupa ID positif.`);
   }
   const teks = String(nilai);
-  if (!/^[1-9][0-9]{0,18}$/.test(teks) || BigInt(teks) > 9223372036854775807n) {
+  if (
+    !/^[1-9][0-9]{0,18}$/.test(teks) ||
+    BigInt(teks) > 9223372036854775807n
+  ) {
     salah(`${nama} tidak valid.`);
   }
   return teks;
 }
+
 export function teksValid(nilai, nama, min, max) {
   if (typeof nilai !== "string") salah(`${nama} wajib berupa teks.`);
   const teks = nilai.trim();
@@ -30,12 +35,14 @@ export function teksValid(nilai, nama, min, max) {
   }
   return teks;
 }
+
 export function angkaValid(nilai, nama, min, max) {
   if (!Number.isSafeInteger(nilai) || nilai < min || nilai > max) {
     salah(`${nama} wajib berupa integer ${min}-${max}.`);
   }
   return nilai;
 }
+
 export function objekValid(body, kolom) {
   if (!body || typeof body !== "object" || Array.isArray(body)) {
     salah("Body wajib berupa object JSON.");
@@ -44,6 +51,7 @@ export function objekValid(body, kolom) {
     salah("Body mengandung kolom yang tidak didukung.");
   }
 }
+
 export function halamanValid(query) {
   const baca = (nama, awal, max) => {
     const nilai = query[nama] ?? String(awal);
@@ -56,6 +64,7 @@ export function halamanValid(query) {
   const limit = baca("limit", 10, 50);
   return { page, limit, offset: (page - 1) * limit };
 }
+
 export function metaHalaman(jumlah, paging) {
   return {
     jumlah,
@@ -64,11 +73,15 @@ export function metaHalaman(jumlah, paging) {
     totalPages: Math.ceil(jumlah / paging.limit),
   };
 }
+
 export function filterValid(query) {
   const q = teksValid(query.q ?? "", "q", 0, 100);
   const kategori = teksValid(query.kategori ?? "", "kategori", 0, 40);
   const status = teksValid(query.status ?? "", "status", 0, 20);
-  if (status && !["draft", "aktif", "habis", "kedaluwarsa"].includes(status)) {
+  if (
+    status &&
+    !["draft", "aktif", "habis", "kedaluwarsa"].includes(status)
+  ) {
     salah("status tidak dikenal.");
   }
   const tersedia = query.tersedia ?? "false";
@@ -77,6 +90,7 @@ export function filterValid(query) {
   }
   return { q, kategori, status, tersedia: tersedia === "true" };
 }
+
 export function penawaranValid(body) {
   objekValid(body, [
     "penyediaId",
@@ -93,7 +107,12 @@ export function penawaranValid(body) {
     penyediaId: idValid(body.penyediaId, "penyediaId"),
     nama: teksValid(body.nama, "nama", 3, 120),
     kategori: teksValid(body.kategori, "kategori", 1, 40),
-    hargaNormal: angkaValid(body.hargaNormal, "hargaNormal", 1, 999999999999),
+    hargaNormal: angkaValid(
+      body.hargaNormal,
+      "hargaNormal",
+      1,
+      999999999999,
+    ),
     hargaPenawaran: angkaValid(
       body.hargaPenawaran,
       "hargaPenawaran",
@@ -121,7 +140,8 @@ export function penawaranValid(body) {
   const tahun = Number(waktu.slice(0, 4));
   const bulan = Number(waktu.slice(5, 7));
   const hari = Number(waktu.slice(8, 10));
-  const kabisat = tahun % 4 === 0 && (tahun % 100 !== 0 || tahun % 400 === 0);
+  const kabisat =
+    tahun % 4 === 0 && (tahun % 100 !== 0 || tahun % 400 === 0);
   const hariBulan = [
     31,
     kabisat ? 29 : 28,
@@ -152,6 +172,7 @@ export function penawaranValid(body) {
   }
   return { ...hasil, berakhirPada: tanggal.toISOString() };
 }
+
 export function pesananValid(body) {
   objekValid(body, ["emailPembeli", "items"]);
   const emailPembeli = teksValid(body.emailPembeli, "emailPembeli", 3, 254);

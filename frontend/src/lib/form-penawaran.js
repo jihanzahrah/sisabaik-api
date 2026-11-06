@@ -10,6 +10,7 @@ export function formKosong() {
     berakhirPada: "",
   };
 }
+
 export function validasiForm(form, waktuSekarang = Date.now()) {
   const errors = {};
   const data = {};
@@ -24,8 +25,14 @@ export function validasiForm(form, waktuSekarang = Date.now()) {
     const mentah = form[field];
     const kosong = mentah == null || String(mentah).trim() === "";
     const nilai = Number(mentah);
-    if (kosong || !Number.isSafeInteger(nilai) || nilai < min || nilai > max) {
-      errors[field] = `${field} wajib bilangan bulat ${min} sampai ${max}.`;
+    if (
+      kosong ||
+      !Number.isSafeInteger(nilai) ||
+      nilai < min ||
+      nilai > max
+    ) {
+      errors[field] =
+        `${field} wajib bilangan bulat ${min} sampai ${max}.`;
     }
     return nilai;
   };
@@ -53,7 +60,8 @@ export function validasiForm(form, waktuSekarang = Date.now()) {
     !Number.isFinite(waktu.getTime()) ||
     waktu.getTime() <= waktuSekarang
   ) {
-    errors.berakhirPada = "Pilih tanggal dan jam yang masih di masa depan.";
+    errors.berakhirPada =
+      "Pilih tanggal dan jam yang masih di masa depan.";
   } else {
     data.berakhirPada = waktu.toISOString();
   }

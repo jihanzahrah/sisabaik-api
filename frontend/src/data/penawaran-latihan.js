@@ -2,6 +2,7 @@ export const penyediaLatihan = {
   id: "1",
   nama: "Lapau Uni Rina",
 };
+
 export function buatDataLatihan(waktu = Date.now()) {
   const jam = 60 * 60 * 1000;
   const dibuatPada = new Date(waktu).toISOString();

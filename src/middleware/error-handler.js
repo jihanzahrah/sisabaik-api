@@ -1,4 +1,5 @@
 import { HttpError } from "../lib/api.js";
+
 export function tanganiError(error, req, res, next) {
   if (res.headersSent) return next(error);
   let status = 500;
@@ -13,7 +14,12 @@ export function tanganiError(error, req, res, next) {
   } else if (error.type === "entity.too.large") {
     status = 413;
     code = "PAYLOAD_TOO_LARGE";
-    message = "Payload melebihi 20 KB.";
+    message = "Payload melebihi batas endpoint. Foto input maksimal 2 MiB.";
+  } else if (error.code === "42703") {
+    status = 503;
+    code = "SCHEMA_MIGRATION_REQUIRED";
+    message =
+      "Struktur database belum sesuai. Jalankan migrasi aplikasi sebelum melanjutkan.";
   } else if (["23503", "23001"].includes(error.code)) {
     status = 409;
     code = "REFERENCE_CONFLICT";
@@ -31,7 +37,7 @@ export function tanganiError(error, req, res, next) {
   } else if (["55P03", "40P01", "40001", "57014"].includes(error.code)) {
     status = 409;
     code = "TRANSACTION_BUSY";
-    message = "Transaksi database sedang sibuk; silakan ulangi.";
+    message = "Transaksi belum dapat selesai. Periksa state sebelum mengulang.";
   } else if (
     ["ECONNREFUSED", "ECONNRESET", "57P01", "53300"].includes(error.code)
   ) {

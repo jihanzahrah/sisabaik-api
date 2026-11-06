@@ -20,8 +20,28 @@ export function labelStatus(nilai) {
       draft: "Draft",
       habis: "Stok habis",
       kedaluwarsa: "Kedaluwarsa",
+      dikonfirmasi: "Diterima penyedia",
       ditutup: "Ditutup",
+      "menunggu-konfirmasi": "Menunggu konfirmasi",
+      "siap-diambil": "Siap diambil",
+      selesai: "Selesai",
+      dibatalkan: "Dibatalkan",
     }[nilai] ?? String(nilai ?? "").replaceAll("-", " ")
+  );
+}
+export function labelPesanan(p) {
+  return p.status === "dibatalkan" && p.jenisPembatalan === "ditolak-penyedia"
+    ? "Ditolak penyedia"
+    : labelStatus(p.status);
+}
+export function labelPembayaran(p) {
+  if (p.status === "dibatalkan") return "Tidak ditagih";
+  return (
+    {
+      "belum-dibayar": "Bayar saat pengambilan",
+      dibayar: "Pembayaran diterima",
+      gratis: "Gratis",
+    }[p.statusPembayaran] ?? "Belum tercatat"
   );
 }
 export function sisaWaktu(iso, sekarang) {

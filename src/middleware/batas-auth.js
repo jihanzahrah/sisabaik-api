@@ -1,4 +1,5 @@
 import { rateLimit } from "express-rate-limit";
+
 export const batasAuth = rateLimit({
   windowMs: 15 * 60 * 1000,
   limit: 20,
@@ -15,6 +16,7 @@ export const batasAuth = rateLimit({
     });
   },
 });
+
 export const batasRegistrasi = rateLimit({
   windowMs: 15 * 60 * 1000,
   limit: 50,
@@ -26,7 +28,7 @@ export const batasRegistrasi = rateLimit({
       error: {
         code: "REGISTRATION_RATE_LIMIT",
         message:
-          "Terlalu banyak pendaftaran. Silakan coba kembali sesuai RetryAfter.",
+          "Terlalu banyak pendaftaran. Silakan coba kembali sesuai Retry-After.",
       },
     });
   },

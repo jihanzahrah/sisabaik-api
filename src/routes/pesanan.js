@@ -5,6 +5,7 @@ import {
   wajibPeran,
   wajibPenyediaTerverifikasi,
 } from "../middleware/auth.js";
+
 const router = Router();
 router.use(wajibLogin, wajibPeran("pembeli", "penyedia"));
 router.use((req, res, next) => {
@@ -16,4 +17,5 @@ router.use((req, res, next) => {
 router.get("/", c.daftar);
 router.get("/:id", c.detail);
 router.post("/", wajibPeran("pembeli"), c.buat);
+router.post("/:id/aksi", c.aksi);
 export default router;

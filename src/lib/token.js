@@ -2,6 +2,7 @@ import jwt from "jsonwebtoken";
 import { randomUUID } from "node:crypto";
 import { authConfig } from "../config/auth.js";
 import { HttpError } from "./api.js";
+
 export function buatToken(row) {
   return jwt.sign({ v: row.versi_token }, authConfig.secret, {
     algorithm: "HS256",
@@ -12,6 +13,7 @@ export function buatToken(row) {
     jwtid: randomUUID(),
   });
 }
+
 export function verifikasiToken(token) {
   try {
     const p = jwt.verify(token, authConfig.secret, {
